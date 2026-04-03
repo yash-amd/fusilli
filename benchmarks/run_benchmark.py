@@ -368,6 +368,8 @@ def main():
     skipped_count = 0
     timeout_count = 0
 
+    print("Reached here 2")
+
     for command in commands:
         cmd_count += 1
 
@@ -438,4 +440,5 @@ def main():
 
 
 if __name__ == "__main__":
+    print("Reached here 1")
     sys.exit(main())
