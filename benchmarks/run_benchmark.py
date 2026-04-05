@@ -152,14 +152,19 @@ def run_profiled_command(
 
     # Use either temporary directory or persistent directory
     if output_dir is None:
+        print(">>> [DEBUG 10] __main__ block reached", flush=True)
         tmpdir_context = tempfile.TemporaryDirectory()
         cmd_output_dir = Path(tmpdir_context.__enter__())
+        print(">>> [DEBUG 11] __main__ block reached", flush=True)
     else:
+        print(">>> [DEBUG 12] __main__ block reached", flush=True)
         tmpdir_context = None
         cmd_output_dir = output_dir / f"command_{cmd_num}"
         cmd_output_dir.mkdir(parents=True, exist_ok=True)
+        print(">>> [DEBUG 13] __main__ block reached", flush=True)
 
     try:
+        print(">>> [DEBUG 14] __main__ block reached", flush=True)
         rocprof_cmd = (
             [
                 "rocprofv3",
@@ -172,11 +177,14 @@ def run_profiled_command(
             + ["--"]
             + driver_cmd
         )
+        print(">>> [DEBUG 15] __main__ block reached", flush=True)
 
         if verbose:
+            print(">>> [DEBUG 16] __main__ block reached", flush=True)
             print(f">>> {shlex.join(rocprof_cmd)}\n")
 
         timeout_val = None if timeout == -1 else timeout
+        print(">>> [DEBUG 17] __main__ block reached", flush=True)
         result = subprocess.run(
             rocprof_cmd,
             check=True,
@@ -185,22 +193,27 @@ def run_profiled_command(
             timeout=timeout_val,
             env=env,
         )
+        print(">>> [DEBUG 18] __main__ block reached", flush=True)
 
         if verbose and result.stdout:
+            print(">>> [DEBUG 19] __main__ block reached", flush=True)
             print(result.stdout)
 
         stats = parse_rocprof_csv(cmd_output_dir, iter_count)
         print(
             f">>> Stats: min={stats.min:.2f}(us), max={stats.max:.2f}(us), mean={stats.mean:.2f}(us), iter={stats.iter}, dispatch_count={stats.dispatch_count}"
         )
+        print(">>> [DEBUG 20] __main__ block reached", flush=True)
 
         return CommandResult(stats, succeeded=True)
 
     except subprocess.TimeoutExpired:
         if verbose:
             print(f">>> Command timed out after {timeout} seconds")
+            print(">>> [DEBUG 21] __main__ block reached", flush=True)
         return CommandResult(TimingStats(), timed_out=True)
     except subprocess.CalledProcessError as e:
+        print(">>> [DEBUG 22] __main__ block reached", flush=True)
         if verbose:
             print(f">>> Command failed with exit code {e.returncode}")
             if e.stderr:
