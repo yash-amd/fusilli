@@ -318,6 +318,7 @@ def main():
     commands_file = Path(args.commands_file)
     if not commands_file.exists():
         print(f"Error: Commands file not found: {commands_file}")
+        print(">>> [DEBUG 000] __main__ block reached", flush=True)
         return 1
 
     with open(commands_file, "r") as f:
@@ -329,6 +330,7 @@ def main():
 
     if not commands:
         print("Error: No commands found in file")
+        print(">>> [DEBUG 1] __main__ block reached", flush=True)
         return 1
 
     print(f"Found {len(commands)} commands")
@@ -368,8 +370,7 @@ def main():
     skipped_count = 0
     timeout_count = 0
 
-    print("Reached here 2")
-
+    print(">>> [DEBUG 3] __main__ block reached", flush=True)
     for command in commands:
         cmd_count += 1
 
@@ -402,6 +403,7 @@ def main():
             )
 
         stats = result.stats
+        print(">>> [DEBUG 4] __main__ block reached", flush=True)
         csv_row = [command]
         for metric in ALL_METRICS:
             value = getattr(stats, metric)
@@ -435,8 +437,10 @@ def main():
     if output_dir is not None:
         print(f"Rocprof outputs: {output_dir.absolute()}")
     print(f"{'='*80}\n")
+    print(">>> [DEBUG 5] __main__ block reached", flush=True)
 
     return 0 if (failed_count + timeout_count == 0) else 1
+    
 
 
 if __name__ == "__main__":
