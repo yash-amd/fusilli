@@ -440,5 +440,5 @@ def main():
 
 
 if __name__ == "__main__":
-    print("Reached here 1")
+    print(">>> [DEBUG 0] __main__ block reached", flush=True)
     sys.exit(main())
