@@ -379,14 +379,17 @@ def main():
         is_skipped = command.startswith(skip_prefix)
 
         if is_skipped:
+            print(">>> [DEBUG 4] __main__ block reached", flush=True)
             display_command = command[len(skip_prefix) :].strip()
             print(f"\n{'='*80}")
             print(f"Skipping command {cmd_count}/{len(commands)}:\n{display_command}")
             print(f"{'='*80}")
             # Create a result with default (N.A.) stats for skipped commands
             result = CommandResult(TimingStats(), skipped=True)
+            print(">>> [DEBUG 5] __main__ block reached", flush=True)
 
         else:
+            print(">>> [DEBUG 6] __main__ block reached", flush=True)
             print(f"\n{'='*80}")
             print(f"Running command {cmd_count}/{len(commands)}:\n{command}")
             print(f"{'='*80}")
@@ -401,9 +404,10 @@ def main():
                 args.timeout,
                 args.extra_compiler_flags,
             )
+            print(">>> [DEBUG 7] __main__ block reached", flush=True)
 
         stats = result.stats
-        print(">>> [DEBUG 4] __main__ block reached", flush=True)
+        print(">>> [DEBUG 8] __main__ block reached", flush=True)
         csv_row = [command]
         for metric in ALL_METRICS:
             value = getattr(stats, metric)
@@ -437,7 +441,7 @@ def main():
     if output_dir is not None:
         print(f"Rocprof outputs: {output_dir.absolute()}")
     print(f"{'='*80}\n")
-    print(">>> [DEBUG 5] __main__ block reached", flush=True)
+    print(">>> [DEBUG 9] __main__ block reached", flush=True)
 
     return 0 if (failed_count + timeout_count == 0) else 1
     
