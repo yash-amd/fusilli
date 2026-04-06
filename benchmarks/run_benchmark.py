@@ -187,9 +187,7 @@ def run_profiled_command(
         print(">>> [DEBUG 17] __main__ block reached", flush=True)
 
         # check running without rocprof
-        cmd_str = "/home/yrathore/yv/actions-runner/_work/fusilli-benchmarks/fusilli-benchmarks/fusilli/build/bin/benchmarks/fusilli_benchmark_driver --device 0 --iter 1 conv
-          --bf16 -F 1 -n 16 -c 288 --in_d 8 -H 48 -W 32 -k 288 --fil_d 1 -y 3 -x 3 --pad_d 0 -p 1 -q 1 --conv_stride_d 1 -u 1 -v 1 --dilation_d 1 -l 1 -j 1 -g 3 --in_layout NDHWC
-           --fil_layout NDHWC --out_layout NDHWC --bias --spatial_dim 3"
+        cmd_str = "/home/yrathore/yv/actions-runner/_work/fusilli-benchmarks/fusilli-benchmarks/fusilli/build/bin/benchmarks/fusilli_benchmark_driver --device 0 --iter 1 conv --bf16 -F 1 -n 16 -c 288 --in_d 8 -H 48 -W 32 -k 288 --fil_d 1 -y 3 -x 3 --pad_d 0 -p 1 -q 1 --conv_stride_d 1 -u 1 -v 1 --dilation_d 1 -l 1 -j 1 -g 3 --in_layout NDHWC --fil_layout NDHWC --out_layout NDHWC --bias --spatial_dim 3"
         rocprof_cmd = shlex.split(cmd_str)
         
         result = subprocess.run(
