@@ -165,18 +165,19 @@ def run_profiled_command(
 
     try:
         print(">>> [DEBUG 14] __main__ block reached", flush=True)
-        rocprof_cmd = (
-            [
-                "rocprofv3",
-                "--output-format",
-                "csv",
-                "--output-directory",
-                str(cmd_output_dir),
-            ]
-            + rocprof_args
-            + ["--"]
-            + driver_cmd
-        )
+        # rocprof_cmd = (
+        #     [
+        #         "rocprofv3",
+        #         "--output-format",
+        #         "csv",
+        #         "--output-directory",
+        #         str(cmd_output_dir),
+        #     ]
+        #     + rocprof_args
+        #     + ["--"]
+        #     + driver_cmd
+        # )
+        rocprof_cmd = driver_cmd
         print(">>> [DEBUG 15] __main__ block reached", flush=True)
 
         if verbose:
