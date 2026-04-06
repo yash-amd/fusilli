@@ -203,7 +203,7 @@ def run_profiled_command(
 
         if verbose and result.stdout:
             print(">>> [DEBUG 19] __main__ block reached", flush=True)
-            print(result.stdout)
+            print(f"this is the result: {result.stdout}", flush=True)
 
         stats = parse_rocprof_csv(cmd_output_dir, iter_count)
         print(
