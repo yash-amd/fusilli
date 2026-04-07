@@ -152,16 +152,45 @@ def run_profiled_command(
 
     # Use either temporary directory or persistent directory
     if output_dir is None:
+        print(">>> [DEBUG 10] __main__ block reached", flush=True)
         tmpdir_context = tempfile.TemporaryDirectory()
         cmd_output_dir = Path(tmpdir_context.__enter__())
+        print(">>> [DEBUG 11] __main__ block reached", flush=True)
     else:
+        print(">>> [DEBUG 12] __main__ block reached", flush=True)
         tmpdir_context = None
         cmd_output_dir = output_dir / f"command_{cmd_num}"
         cmd_output_dir.mkdir(parents=True, exist_ok=True)
+        print(">>> [DEBUG 13] __main__ block reached", flush=True)
 
     try:
+        print(">>> [DEBUG 14] __main__ block reached", flush=True)
+        print("=== rocprofv3 --version ===")
+
+          # Run which rocprofv3
+        result_which = subprocess.run(
+            ["which", "rocprofv3"],
+            capture_output=True,
+            text=True
+        )
+        print("\n=== which rocprofv3 ===")
+        print(result_which.stdout.strip())
+        sys.exit(1)
+        result_version = subprocess.run(
+            ["rocprofv3", "--version"],
+            capture_output=True,
+            text=True
+        )
+        print(result_version.stdout)
+        print(result_version.stderr)
+    
+
+
         rocprof_cmd = (
             [
+                "rocprofv3",
+                "--version",
+                "&&",
                 "rocprofv3",
                 "--output-format",
                 "csv",
@@ -172,11 +201,20 @@ def run_profiled_command(
             + ["--"]
             + driver_cmd
         )
+        # rocprof_cmd = driver_cmd
+        print(">>> [DEBUG 15] __main__ block reached", flush=True)
 
         if verbose:
+            print(">>> [DEBUG 16] __main__ block reached", flush=True)
             print(f">>> {shlex.join(rocprof_cmd)}\n")
 
         timeout_val = None if timeout == -1 else timeout
+        print(">>> [DEBUG 17] __main__ block reached", flush=True)
+
+        # check running without rocprof
+        # cmd_str = "/home/yrathore/yv/actions-runner/_work/fusilli-benchmarks/fusilli-benchmarks/fusilli/build/bin/benchmarks/fusilli_benchmark_driver --device 0 --iter 1 conv --bf16 -F 1 -n 16 -c 288 --in_d 8 -H 48 -W 32 -k 288 --fil_d 1 -y 3 -x 3 --pad_d 0 -p 1 -q 1 --conv_stride_d 1 -u 1 -v 1 --dilation_d 1 -l 1 -j 1 -g 3 --in_layout NDHWC --fil_layout NDHWC --out_layout NDHWC --bias --spatial_dim 3"
+        # rocprof_cmd = shlex.split(cmd_str)
+        
         result = subprocess.run(
             rocprof_cmd,
             check=True,
@@ -185,22 +223,27 @@ def run_profiled_command(
             timeout=timeout_val,
             env=env,
         )
+        print(">>> [DEBUG 18] __main__ block reached", flush=True)
 
         if verbose and result.stdout:
-            print(result.stdout)
+            print(">>> [DEBUG 19] __main__ block reached", flush=True)
+            print(f"this is the result: {result.stdout}", flush=True)
 
         stats = parse_rocprof_csv(cmd_output_dir, iter_count)
         print(
             f">>> Stats: min={stats.min:.2f}(us), max={stats.max:.2f}(us), mean={stats.mean:.2f}(us), iter={stats.iter}, dispatch_count={stats.dispatch_count}"
         )
+        print(">>> [DEBUG 20] __main__ block reached", flush=True)
 
         return CommandResult(stats, succeeded=True)
 
     except subprocess.TimeoutExpired:
         if verbose:
             print(f">>> Command timed out after {timeout} seconds")
+            print(">>> [DEBUG 21] __main__ block reached", flush=True)
         return CommandResult(TimingStats(), timed_out=True)
     except subprocess.CalledProcessError as e:
+        print(">>> [DEBUG 22] __main__ block reached", flush=True)
         if verbose:
             print(f">>> Command failed with exit code {e.returncode}")
             if e.stderr:
@@ -318,6 +361,7 @@ def main():
     commands_file = Path(args.commands_file)
     if not commands_file.exists():
         print(f"Error: Commands file not found: {commands_file}")
+        print(">>> [DEBUG 000] __main__ block reached", flush=True)
         return 1
 
     with open(commands_file, "r") as f:
@@ -329,6 +373,7 @@ def main():
 
     if not commands:
         print("Error: No commands found in file")
+        print(">>> [DEBUG 1] __main__ block reached", flush=True)
         return 1
 
     print(f"Found {len(commands)} commands")
@@ -368,6 +413,7 @@ def main():
     skipped_count = 0
     timeout_count = 0
 
+    print(">>> [DEBUG 3] __main__ block reached", flush=True)
     for command in commands:
         cmd_count += 1
 
@@ -376,14 +422,17 @@ def main():
         is_skipped = command.startswith(skip_prefix)
 
         if is_skipped:
+            print(">>> [DEBUG 4] __main__ block reached", flush=True)
             display_command = command[len(skip_prefix) :].strip()
             print(f"\n{'='*80}")
             print(f"Skipping command {cmd_count}/{len(commands)}:\n{display_command}")
             print(f"{'='*80}")
             # Create a result with default (N.A.) stats for skipped commands
             result = CommandResult(TimingStats(), skipped=True)
+            print(">>> [DEBUG 5] __main__ block reached", flush=True)
 
         else:
+            print(">>> [DEBUG 6] __main__ block reached", flush=True)
             print(f"\n{'='*80}")
             print(f"Running command {cmd_count}/{len(commands)}:\n{command}")
             print(f"{'='*80}")
@@ -398,8 +447,10 @@ def main():
                 args.timeout,
                 args.extra_compiler_flags,
             )
+            print(">>> [DEBUG 7] __main__ block reached", flush=True)
 
         stats = result.stats
+        print(">>> [DEBUG 8] __main__ block reached", flush=True)
         csv_row = [command]
         for metric in ALL_METRICS:
             value = getattr(stats, metric)
@@ -433,9 +484,12 @@ def main():
     if output_dir is not None:
         print(f"Rocprof outputs: {output_dir.absolute()}")
     print(f"{'='*80}\n")
+    print(">>> [DEBUG 9] __main__ block reached", flush=True)
 
     return 0 if (failed_count + timeout_count == 0) else 1
+    
 
 
 if __name__ == "__main__":
+    print(">>> [DEBUG 0] __main__ block reached", flush=True)
     sys.exit(main())
