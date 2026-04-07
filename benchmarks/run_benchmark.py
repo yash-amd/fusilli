@@ -165,24 +165,25 @@ def run_profiled_command(
 
     try:
         print(">>> [DEBUG 14] __main__ block reached", flush=True)
+        print("=== rocprofv3 --version ===")
+        print(result_version.stdout)
+        print(result_version.stderr)
+        
+          # Run which rocprofv3
+          result_which = subprocess.run(
+              ["which", "rocprofv3"],
+              capture_output=True,
+              text=True
+          )
+          print("\n=== which rocprofv3 ===")
+          print(result_which.stdout.strip())
+          sys.exit(1)
         result_version = subprocess.run(
           ["rocprofv3", "--version"],
           capture_output=True,
           text=True
       )
-    print("=== rocprofv3 --version ===")
-    print(result_version.stdout)
-    print(result_version.stderr)
     
-      # Run which rocprofv3
-      result_which = subprocess.run(
-          ["which", "rocprofv3"],
-          capture_output=True,
-          text=True
-      )
-      print("\n=== which rocprofv3 ===")
-      print(result_which.stdout.strip())
-      sys.exit(1)
 
 
         rocprof_cmd = (
