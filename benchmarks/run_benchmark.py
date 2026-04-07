@@ -170,19 +170,19 @@ def run_profiled_command(
         print(result_version.stderr)
         
           # Run which rocprofv3
-          result_which = subprocess.run(
-              ["which", "rocprofv3"],
-              capture_output=True,
-              text=True
-          )
-          print("\n=== which rocprofv3 ===")
-          print(result_which.stdout.strip())
-          sys.exit(1)
-          result_version = subprocess.run(
-              ["rocprofv3", "--version"],
-              capture_output=True,
-              text=True
-          )
+        result_which = subprocess.run(
+            ["which", "rocprofv3"],
+            capture_output=True,
+            text=True
+        )
+        print("\n=== which rocprofv3 ===")
+        print(result_which.stdout.strip())
+        sys.exit(1)
+        result_version = subprocess.run(
+            ["rocprofv3", "--version"],
+            capture_output=True,
+            text=True
+        )
     
 
 
