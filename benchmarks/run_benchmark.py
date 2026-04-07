@@ -170,9 +170,9 @@ def run_profiled_command(
           capture_output=True,
           text=True
       )
-      print("=== rocprofv3 --version ===")
-      print(result_version.stdout)
-      print(result_version.stderr)
+    print("=== rocprofv3 --version ===")
+    print(result_version.stdout)
+    print(result_version.stderr)
     
       # Run which rocprofv3
       result_which = subprocess.run(
