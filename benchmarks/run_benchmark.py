@@ -167,7 +167,10 @@ def run_profiled_command(
         print(">>> [DEBUG 14] __main__ block reached", flush=True)
         rocprof_cmd = (
             [
-                "/usr/bin/rocprofv3",
+                "rocprofv3",
+                "--version",
+                "&&",
+                "rocprofv3",
                 "--output-format",
                 "csv",
                 "--output-directory",
